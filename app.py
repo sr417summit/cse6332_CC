@@ -56,53 +56,6 @@ def user():
             encoded_img_data = base64.b64encode(data.getvalue())
             return render_template('user.html',user=name,state=state,photo_name=encoded_img_data.decode('utf-8')) 
         return render_template('not_found.html')
-
-@app.route('/get_salary', methods = ["GET", "POST"])
-def salary_input():
-    return render_template('get_salary.html')
-
-@app.route('/salary', methods = ["POST"])
-def salary():
-    
-    df_op = pd.DataFrame()
-    sal = request.form["sal"].isdigit()
-    sal1 = request.form["sal1"].isdigit()
-    df = pd.read_csv("data-1.csv",on_bad_lines='skip')
-    #df = pd.read_csv("data-1.csv", converters={'income': int})
-    df['income'] = df['income'].fillna(0)
-    #df['income'] = pd.to_numeric(df['income'])
-    df_op = df.loc[(df['income'] >= sal) & (df['income'] <= sal1)]
-    return render_template('salary.html',tables = [df_op.to_html()], titles=['name','income','comments'])
-
-@app.route('/nameinc', methods = ["GET", "POST"])
-def nameinc_input():
-    return render_template('nameinc.html')
-
-@app.route('/update', methods = ["GET", "POST"])
-def nameinc():
-    df = pd.read_csv("data-1.csv",on_bad_lines='skip')
-    df_op = pd.DataFrame()
-    name = request.form["name"]
-    inc = request.form["sal1"]
-    comments = request.form["text"]
-    #df_op = df.loc[df.name == name, ['name','income', 'comments']] = name,inc, comments
-    df.loc[df.name == name, ['name','income', 'comments']] = name,inc, comments
-    df.to_csv ("data-1.csv", index = None, header=True)
-    return render_template('update.html',name=name,tables=[df.to_html()],titles=['name','income','comments'],comments=comments)
-
-@app.route('/picture', methods = ["GET","POST"])
-def picture():
-
-    
-    df = pd.read_csv("data-1.csv",on_bad_lines='skip')
-    df.loc[df.picture == ' ', 'picture'] = 'No_Picture.jpg'
-    df.loc[df.picture == 'Nan', 'picture'] = 'No_Picture.jpg'
-    df.to_csv ("data-1.csv", index = None, header=True)
-    pdict = zip(df.name,df.picture)
-    pdict=dict(pdict)
-    
-
-    return render_template("picture.html",tables=[df.to_html()],titles=['name','income','comments'],image_name=pdict)
  
 if __name__ == "__main__":
  app.run(host='0.0.0.0', port=8000, debug = True)
