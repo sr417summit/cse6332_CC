@@ -105,4 +105,4 @@ def picture():
     return render_template("picture.html",tables=[df.to_html()],titles=['name','income','comments'],image_name=pdict)
  
 if __name__ == "__main__":
- app.run(host='0.0.0.0', port=8000, debug = True)
+ app.run(debug = True)
